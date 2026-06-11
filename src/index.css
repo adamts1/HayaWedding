@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-cream: #F6F4ED;
+  --color-cream-light: #F6F4ED;
+  --color-cream-dark: #F6F4ED;
+  --color-blush: #E8A0B5;
+  --color-blush-light: #F0D4DE;
+  --color-blush-dark: #D4789A;
+  --color-magenta: #CF43A8;
+  --color-green: #508330;
+  --color-olive: #111827;
+  --color-olive-light: #111827;
+  --color-olive-muted: #111827;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+  }
+  body {
+    background-color: var(--color-cream);
+    overflow-x: hidden;
+    @apply font-sans antialiased;
+  }
+}
+
+#root {
+  overflow-x: clip;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; transform: translateY(12px); }
+  100% { opacity: 1; transform: translateY(0); }
+}

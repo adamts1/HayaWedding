@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wedding Invitation</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      background: #f7f2ef;
+      color: #2f2a27;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .invitation {
+      width: min(100%, 900px);
+      background: #ffffff;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.12);
+    }
+
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 420px;
+      background: url('2.png') center/cover no-repeat;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.20), rgba(0,0,0,0.55));
+    }
+
+    .hero-text {
+      position: absolute;
+      left: 24px;
+      bottom: 28px;
+      color: #fff;
+      max-width: 620px;
+    }
+
+    .hero-text h1 {
+      font-size: clamp(2.4rem, 4vw, 4rem);
+      letter-spacing: 0.04em;
+      margin-bottom: 0.4rem;
+    }
+
+    .hero-text p {
+      font-size: 1.05rem;
+      opacity: 0.95;
+    }
+
+    .content {
+      padding: 42px 36px 48px;
+    }
+
+    .content h2 {
+      font-size: 1.8rem;
+      margin-bottom: 16px;
+    }
+
+    .details {
+      display: grid;
+      gap: 18px;
+    }
+
+    .detail-card {
+      padding: 22px 24px;
+      border-radius: 18px;
+      background: #fbf6f1;
+      border: 1px solid #ede2d8;
+    }
+
+    .detail-card strong {
+      display: block;
+      margin-bottom: 8px;
+      color: #8a6f60;
+    }
+
+    .footer {
+      margin-top: 32px;
+      padding-top: 20px;
+      border-top: 1px solid #eee3dc;
+      color: #6f6157;
+      font-size: 0.95rem;
+    }
+  </style>
+</head>
+<body>
+  <article class="invitation">
+    <section class="hero">
+      <div class="hero-text">
+        <h1>Join Us for a Wedding Celebration</h1>
+        <p>We would be honored to have you with us as we celebrate love, family, and new beginnings.</p>
+      </div>
+    </section>
+
+    <section class="content">
+      <h2>Details</h2>
+      <div class="details">
+        <div class="detail-card">
+          <strong>When</strong>
+          <p>Saturday, June 28, 2026</p>
+          <p>Ceremony begins at 4:00 PM</p>
+        </div>
+        <div class="detail-card">
+          <strong>Where</strong>
+          <p>Haya Gardens</p>
+          <p>123 Celebration Avenue</p>
+          <p>City, State</p>
+        </div>
+        <div class="detail-card">
+          <strong>RSVP</strong>
+          <p>Please respond by June 10th.</p>
+          <p>Contact: hello@example.com</p>
+        </div>
+      </div>
+      <div class="footer">
+        <p>We look forward to celebrating with you.</p>
+      </div>
+    </section>
+  </article>
+</body>
+</html>
