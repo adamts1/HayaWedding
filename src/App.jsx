@@ -185,23 +185,20 @@ export default function App() {
             <img src="/1.webp" alt="Wedding invitation gate" className="absolute inset-0 w-full h-full object-cover" />
           </button>
 
-          {/* video — fades in over the gate, then the whole overlay fades to the hero */}
-          {started ? (
-            <video
-              ref={videoRef}
-              className="absolute inset-0 w-full h-full object-cover"
-              style={{ opacity: videoPlaying ? 1 : 0, transition: 'opacity 600ms ease-out', zIndex: 1 }}
-              playsInline
-              autoPlay
-              muted
-              preload="auto"
-              onPlaying={() => setVideoPlaying(true)}
-              onEnded={finishIntro}
-            >
-              <source src="/intro.webm" type="video/webm" />
-              <source src="/intro.mp4" type="video/mp4" />
-            </video>
-          ) : null}
+          {/* video — always mounted so it buffers behind the gate; plays on tap, then
+              fades in over the gate, and finally the whole overlay fades to the hero */}
+          <video
+            ref={videoRef}
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{ opacity: videoPlaying ? 1 : 0, transition: 'opacity 600ms ease-out', zIndex: 1 }}
+            playsInline
+            muted
+            preload="auto"
+            onPlaying={() => setVideoPlaying(true)}
+            onEnded={finishIntro}
+          >
+            <source src="/intro.mp4" type="video/mp4" />
+          </video>
 
           {/* skip */}
           {started && !finished ? (
