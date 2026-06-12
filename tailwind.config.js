@@ -33,8 +33,8 @@ export default {
       fontFamily: {
         display: ['Fredoka', 'system-ui', 'sans-serif'],
         heading: ['Suez One', 'system-ui', 'sans-serif'],
-        serif: ['Bona Nova', 'Georgia', 'serif'],
-        sans: ['Alef', 'Google Sans', 'system-ui', 'sans-serif'],
+        serif: ['Frank Ruhl Libre', 'Bona Nova', 'Georgia', 'serif'],
+        sans: ['Assistant', 'Alef', 'Google Sans', 'system-ui', 'sans-serif'],
         handwritten: ['Playpen Sans Hebrew', 'cursive'],
         fredoka: ['Fredoka', 'sans-serif'],
         alef: ['Alef', 'sans-serif'],

@@ -251,38 +251,17 @@ export default function App() {
           </div>
         </section>
 
-        {/* 1 — Details */}
+        {/* 1 — Details (designed image inside the frame; only the icons stay) */}
         <section id="details" className="py-6 px-2.5" style={frameBg}>
-          <div className={`${frameBorder} bg-white/70 px-7 py-12 text-center`}>
-            <p className="text-sm tracking-[0.15em] text-[#7E632E]/70">{t.invitationEyebrow}</p>
-            <h1 className="mt-4 text-4xl font-serif text-[#3E2F28]">{t.couple}</h1>
-
-            <div className="mt-6 space-y-1 text-sm leading-6 text-[#5D4A41]">
-              <p>{t.parent1}</p>
-              <p>{t.parent2}</p>
-            </div>
-
-            <div className="mx-auto my-8 h-px w-16 bg-[#9C7C3C]/30" />
-
-            <div className="space-y-1">
-              <p className="text-xs tracking-[0.15em] text-[#7E632E]/70">{t.whenLabel}</p>
-              <p className="text-lg font-serif text-[#3E2F28]">{t.date}</p>
-              <p className="text-base text-[#5D4A41]">{t.reception}</p>
-            </div>
-
-            <div className="mt-6 space-y-1">
-              <p className="text-xs tracking-[0.15em] text-[#7E632E]/70">{t.whereLabel}</p>
-              <p className="text-lg font-serif text-[#3E2F28]">{t.venueName}</p>
-              <p className="text-base text-[#5D4A41]">{t.venueAddress}</p>
-            </div>
-
-            <div className="mt-7 flex justify-center gap-4">
+          <div className={`relative w-full aspect-[1170/2532] overflow-hidden ${frameBorder}`}>
+            <img src="/details.webp" alt={t.couple} className="absolute inset-0 w-full h-full object-cover" />
+            <div className="absolute inset-x-0 top-[58%] z-10 flex justify-center gap-4">
               <a
                 href={mapsUrl}
                 target="_blank"
                 rel="noreferrer"
                 aria-label={t.navAria}
-                className="flex h-12 w-12 items-center justify-center rounded-full border-[3px] border-[#B1CAA7] bg-white/70 text-[#7E632E] shadow-[0_8px_22px_rgba(124,99,46,0.14)] transition-colors hover:bg-white/85"
+                className="flex h-12 w-12 items-center justify-center rounded-full border-[3px] border-[#B1CAA7] bg-white/80 text-[#7E632E] shadow-[0_8px_22px_rgba(124,99,46,0.22)] transition-colors hover:bg-white"
               >
                 <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
@@ -294,7 +273,7 @@ export default function App() {
                 target="_blank"
                 rel="noreferrer"
                 aria-label={t.calAria}
-                className="flex h-12 w-12 items-center justify-center rounded-full border-[3px] border-[#B1CAA7] bg-white/70 text-[#7E632E] shadow-[0_8px_22px_rgba(124,99,46,0.14)] transition-colors hover:bg-white/85"
+                className="flex h-12 w-12 items-center justify-center rounded-full border-[3px] border-[#B1CAA7] bg-white/80 text-[#7E632E] shadow-[0_8px_22px_rgba(124,99,46,0.22)] transition-colors hover:bg-white"
               >
                 <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <rect x="3" y="4" width="18" height="18" rx="2" />
@@ -305,55 +284,11 @@ export default function App() {
           </div>
         </section>
 
-        {/* 2 — Dress code */}
-        <section id="dress-code" className="py-6 px-2.5" style={frameBg}>
-          <div className={`${frameBorder} bg-white/70 px-7 py-12 text-center`}>
-            <p className="text-xs tracking-[0.15em] text-[#7E632E]/70">{t.dressEyebrow}</p>
-            <h2 className="mt-3 text-3xl font-serif text-[#3E2F28]">{t.dressTitle}</h2>
-            <p className="mx-auto mt-4 max-w-[28rem] text-base leading-7 text-[#5D4A41]">{t.dressText}</p>
-            <div className="mt-7 flex justify-center gap-3">
-              {['#7E632E', '#B1CAA7', '#E7DACC', '#3E2F28'].map((c) => (
-                <span
-                  key={c}
-                  className="h-9 w-9 rounded-full border border-black/10 shadow-inner"
-                  style={{ backgroundColor: c }}
-                  aria-hidden="true"
-                />
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* 3 — Timeline */}
-        <section id="timeline" className="py-6 px-2.5" style={frameBg}>
-          <div className={`${frameBorder} bg-white/70 px-7 py-12`}>
-            <div className="text-center">
-              <p className="text-xs tracking-[0.15em] text-[#7E632E]/70">{t.timelineEyebrow}</p>
-              <h2 className="mt-3 text-3xl font-serif text-[#3E2F28]">{t.timelineTitle}</h2>
-            </div>
-
-            <ol className={`relative mx-auto mt-9 max-w-[24rem] ${isRtl ? 'border-r-2 pr-7' : 'border-l-2 pl-7'} border-[#9C7C3C]/25`}>
-              {t.timeline.map((item) => (
-                <li key={item.name} className="relative mb-7 last:mb-0">
-                  <span className={`absolute ${isRtl ? '-right-[37px]' : '-left-[37px]'} top-1 flex h-4 w-4 items-center justify-center rounded-full border-2 border-[#B1CAA7] bg-white`}>
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#7E632E]" />
-                  </span>
-                  <p className="text-sm font-semibold tracking-wide text-[#7E632E]">{item.time}</p>
-                  <p className="text-lg font-serif text-[#3E2F28]">{item.name}</p>
-                </li>
-              ))}
-            </ol>
-          </div>
-        </section>
-
-        {/* 4 — RSVP */}
+        {/* 2 — RSVP (designed image inside the frame; only the fields stay) */}
         <section ref={rsvpRef} id="rsvp" className="py-6 px-2.5" style={frameBg}>
-          <div className={`${frameBorder} bg-white/70 px-7 py-12 text-center`}>
-            <p className="text-xs tracking-[0.15em] text-[#7E632E]/70">{t.rsvpEyebrow}</p>
-            <h2 className="mt-3 text-3xl font-serif text-[#3E2F28]">{t.rsvpTitle}</h2>
-            <p className="mx-auto mt-4 max-w-[28rem] text-base leading-7 text-[#5D4A41]">{t.rsvpText}</p>
-
-            <form onSubmit={handleRsvp} className={`mx-auto mt-7 grid max-w-[420px] gap-4 ${isRtl ? 'text-right' : 'text-left'}`}>
+          <div className={`relative w-full aspect-[1170/2532] overflow-hidden ${frameBorder}`}>
+            <img src="/rsvp.webp" alt="" aria-hidden="true" className="absolute inset-0 w-full h-full object-cover" />
+            <form onSubmit={handleRsvp} className={`absolute inset-x-0 top-[17%] z-10 mx-auto grid w-full max-w-[340px] gap-3.5 px-7 ${isRtl ? 'text-right' : 'text-left'}`}>
               <label className="block">
                 <span className="text-xs tracking-[0.1em] text-[#7E632E]">{t.nameLabel}</span>
                 <input
@@ -362,7 +297,7 @@ export default function App() {
                   onChange={updateField('name')}
                   required
                   placeholder={t.namePlaceholder}
-                  className="mt-1 w-full rounded-2xl border border-[#E7DACC] bg-[#FBF6F1] px-4 py-3 text-base text-[#3E2F28] placeholder:text-[#5D4A41]/40 outline-none transition-colors focus:border-[#B1CAA7]"
+                  className="mt-1 w-full rounded-2xl border border-[#7E632E]/45 bg-transparent px-4 py-3 text-base text-[#3E2F28] placeholder:text-[#5D4A41]/40 outline-none transition-colors focus:border-[#B1CAA7]"
                 />
               </label>
 
@@ -375,7 +310,7 @@ export default function App() {
                   value={form.guests}
                   onChange={updateField('guests')}
                   required
-                  className="mt-1 w-full rounded-2xl border border-[#E7DACC] bg-[#FBF6F1] px-4 py-3 text-base text-[#3E2F28] outline-none transition-colors focus:border-[#B1CAA7]"
+                  className="mt-1 w-full rounded-2xl border border-[#7E632E]/45 bg-transparent px-4 py-3 text-base text-[#3E2F28] outline-none transition-colors focus:border-[#B1CAA7]"
                 />
               </label>
 
@@ -387,7 +322,7 @@ export default function App() {
                   onChange={updateField('phone')}
                   required
                   placeholder={t.phonePlaceholder}
-                  className="mt-1 w-full rounded-2xl border border-[#E7DACC] bg-[#FBF6F1] px-4 py-3 text-base text-[#3E2F28] placeholder:text-[#5D4A41]/40 outline-none transition-colors focus:border-[#B1CAA7]"
+                  className="mt-1 w-full rounded-2xl border border-[#7E632E]/45 bg-transparent px-4 py-3 text-base text-[#3E2F28] placeholder:text-[#5D4A41]/40 outline-none transition-colors focus:border-[#B1CAA7]"
                 />
               </label>
 
@@ -398,19 +333,19 @@ export default function App() {
                   value={form.message}
                   onChange={updateField('message')}
                   placeholder={t.messagePlaceholder}
-                  className="mt-1 w-full resize-none rounded-2xl border border-[#E7DACC] bg-[#FBF6F1] px-4 py-3 text-base text-[#3E2F28] placeholder:text-[#5D4A41]/40 outline-none transition-colors focus:border-[#B1CAA7]"
+                  className="mt-1 w-full resize-none rounded-2xl border border-[#7E632E]/45 bg-transparent px-4 py-3 text-base text-[#3E2F28] placeholder:text-[#5D4A41]/40 outline-none transition-colors focus:border-[#B1CAA7]"
                 />
               </label>
 
               <button
                 type="submit"
-                className="mt-2 rounded-full border-[3px] border-[#B1CAA7] bg-white/70 px-6 py-3 text-sm tracking-[0.1em] text-[#7E632E] shadow-[0_8px_22px_rgba(124,99,46,0.14)] transition-colors hover:bg-white/85"
+                className="mt-1 rounded-full border-[3px] border-[#B1CAA7] bg-white/85 px-6 py-3 text-sm tracking-[0.1em] text-[#7E632E] shadow-[0_8px_22px_rgba(124,99,46,0.14)] transition-colors hover:bg-white"
               >
                 {t.submit}
               </button>
 
               {sent ? (
-                <p className="text-center text-sm text-[#7E632E]">{t.thanks}</p>
+                <p className="text-center text-sm font-semibold text-[#7E632E]">{t.thanks}</p>
               ) : null}
             </form>
           </div>
@@ -472,9 +407,9 @@ export default function App() {
         type="button"
         onClick={toggleLang}
         aria-label={lang === 'he' ? 'Switch to English' : 'החלפה לעברית'}
-        className="fixed top-4 right-4 z-[60] flex h-10 w-10 items-center justify-center rounded-full border border-[#9C7C3C]/40 bg-white/85 text-xl shadow-[0_4px_14px_rgba(124,99,46,0.18)] transition-colors hover:bg-white"
+        className="fixed top-4 right-4 z-[60] text-2xl leading-none transition-transform hover:scale-110"
       >
-        <span className="leading-none" aria-hidden="true">{t.switchFlag}</span>
+        <span aria-hidden="true">{t.switchFlag}</span>
       </button>
 
       {started ? (
