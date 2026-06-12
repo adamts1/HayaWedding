@@ -5,42 +5,133 @@ const frameBg = {
 }
 const frameBorder = 'border-2 border-[#9C7C3C]/40'
 
-// Order of the evening — adjust the times to your schedule
-const TIMELINE = [
-  { time: '18:00', name: 'Cocktail Reception' },
-  { time: '18:45', name: 'Chuppah & Kiddushin' },
-  { time: '19:30', name: 'Party' },
-  { time: '20:15', name: 'Dinner' },
-  { time: '21:00', name: 'Dancing' },
-  { time: '22:30', name: 'Desserts' },
-  { time: '23:30', name: 'After Party' },
-]
-
-// Update with the venue's address / coordinates
-const VENUE_NAME = 'The Venue'
-const VENUE_ADDRESS = '123 Celebration Ave, City'
-const MAPS_URL = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(VENUE_ADDRESS)
-
-// Add-to-calendar (Google Calendar template) — adjust title & dates to match the event
-const EVENT_TITLE = 'Haya & Loved One — Wedding'
-const CAL_URL =
-  'https://calendar.google.com/calendar/render?action=TEMPLATE' +
-  '&text=' + encodeURIComponent(EVENT_TITLE) +
-  '&dates=20260903T180000/20260904T020000' +
-  '&location=' + encodeURIComponent(VENUE_ADDRESS) +
-  '&details=' + encodeURIComponent("We can't wait to celebrate with you!")
+// ---- Translations (edit names, venue, date & times here) ----
+const STRINGS = {
+  he: {
+    dir: 'rtl',
+    invitationEyebrow: 'הזמנה לחתונה',
+    couple: 'עדן ואושר',
+    parent1: 'בתם של רונית ויוסי כהן',
+    parent2: 'בנם של מירי ודוד לוי',
+    whenLabel: 'מתי',
+    date: 'יום חמישי, 3 בספטמבר 2026',
+    reception: 'קבלת פנים החל מהשעה 18:00',
+    whereLabel: 'היכן',
+    venueName: 'אולם האירועים',
+    venueAddress: 'רחוב הפרחים 12, תל אביב',
+    navAria: 'ניווט למקום האירוע',
+    calAria: 'הוספה ליומן',
+    dressEyebrow: 'קוד לבוש',
+    dressTitle: 'ערב חגיגי',
+    dressText:
+      'נשמח לראות אתכם בלבוש חגיגי בגוונים רכים וטבעיים — ונוחים מספיק כדי לרקוד עד הבוקר.',
+    timelineEyebrow: 'סדר הערב',
+    timelineTitle: 'לוח זמנים',
+    timeline: [
+      { time: '18:00', name: 'קבלת פנים' },
+      { time: '18:45', name: 'חופה וקידושין' },
+      { time: '19:30', name: 'מסיבה' },
+      { time: '20:15', name: 'ארוחת ערב' },
+      { time: '21:00', name: 'ריקודים' },
+      { time: '22:30', name: 'קינוחים' },
+      { time: '23:30', name: 'אפטר פארטי' },
+    ],
+    rsvpEyebrow: 'נשמח לראותכם',
+    rsvpTitle: 'אישור הגעה',
+    rsvpText: 'אנא אשרו את הגעתכם עד ה-1 באוגוסט 2026.',
+    nameLabel: 'שם מלא',
+    namePlaceholder: 'השם המלא שלך',
+    guestsLabel: 'מספר אורחים',
+    phoneLabel: 'טלפון',
+    phonePlaceholder: '050-0000000',
+    messageLabel: 'ברכה לזוג',
+    messagePlaceholder: 'כמה מילים חמות…',
+    submit: 'שליחת אישור',
+    thanks: 'תודה רבה! האישור בדרך אליכם 💛',
+    skip: 'דלג',
+    muteOn: 'השתקת מוזיקה',
+    muteOff: 'הפעלת מוזיקה',
+    gateAria: 'פתחו את ההזמנה',
+    gateAlt: 'שער ההזמנה',
+    scrollAria: 'גלילה לאישור הגעה',
+    eventTitle: 'החתונה של עדן ואושר',
+    calDetails: 'נשמח לחגוג אתכם!',
+    emailSubject: 'אישור הגעה - ',
+    emailName: 'שם',
+    emailGuests: 'מספר אורחים',
+    emailPhone: 'טלפון',
+    emailMessage: 'ברכה',
+    switchTo: 'EN',
+    switchFlag: '🇬🇧',
+  },
+  en: {
+    dir: 'ltr',
+    invitationEyebrow: 'Wedding Invitation',
+    couple: 'Eden & Osher',
+    parent1: 'Daughter of Ronit & Yossi Cohen',
+    parent2: 'Son of Miri & David Levi',
+    whenLabel: 'When',
+    date: 'Thursday, September 3, 2026',
+    reception: 'Reception from 18:00',
+    whereLabel: 'Where',
+    venueName: 'The Venue',
+    venueAddress: '12 HaPrahim St, Tel Aviv',
+    navAria: 'Navigate to venue',
+    calAria: 'Add to calendar',
+    dressEyebrow: 'Dress Code',
+    dressTitle: 'Formal Elegant',
+    dressText:
+      "We'd love to see you dressed to celebrate. Think cocktail attire in soft, earthy tones — and comfortable enough to dance the night away.",
+    timelineEyebrow: 'Order of the Evening',
+    timelineTitle: 'Timeline',
+    timeline: [
+      { time: '18:00', name: 'Cocktail Reception' },
+      { time: '18:45', name: 'Chuppah & Kiddushin' },
+      { time: '19:30', name: 'Party' },
+      { time: '20:15', name: 'Dinner' },
+      { time: '21:00', name: 'Dancing' },
+      { time: '22:30', name: 'Desserts' },
+      { time: '23:30', name: 'After Party' },
+    ],
+    rsvpEyebrow: 'Kindly Reply',
+    rsvpTitle: 'RSVP',
+    rsvpText: 'Please let us know if you can join the celebration by August 1, 2026.',
+    nameLabel: 'Full name',
+    namePlaceholder: 'Your full name',
+    guestsLabel: 'Number of guests',
+    phoneLabel: 'Phone',
+    phonePlaceholder: '+972 50-000-0000',
+    messageLabel: 'Message for the couple',
+    messagePlaceholder: 'A few warm words…',
+    submit: 'Send RSVP',
+    thanks: 'Thank you! Your reply is on its way. 💛',
+    skip: 'Skip',
+    muteOn: 'Mute music',
+    muteOff: 'Unmute music',
+    gateAria: 'Open the invitation',
+    gateAlt: 'Wedding invitation gate',
+    scrollAria: 'Scroll to RSVP',
+    eventTitle: 'Eden & Osher — Wedding',
+    calDetails: "We can't wait to celebrate with you!",
+    emailSubject: 'Wedding RSVP — ',
+    emailName: 'Name',
+    emailGuests: 'Number of guests',
+    emailPhone: 'Phone',
+    emailMessage: 'Message',
+    switchTo: 'עב',
+    switchFlag: '🇮🇱',
+  },
+}
 
 // Where RSVP submissions are sent
 const RSVP_EMAIL = 'hello@example.com'
 
 export default function App() {
-  // The cinematic intro (gate image -> video) lives in a fixed overlay above the
-  // hero. Transitions are crossfades: the gate fades into the video, then the whole
-  // overlay fades out to reveal the hero already painted underneath — no flash, no black.
-  const [started, setStarted] = useState(false)      // gate tapped -> play video
-  const [videoPlaying, setVideoPlaying] = useState(false) // first frame ready -> fade gate out
-  const [finished, setFinished] = useState(false)    // video ended -> fade overlay out
-  const [removed, setRemoved] = useState(false)       // overlay faded out -> unlock scroll
+  const [lang, setLang] = useState('he')
+  const [started, setStarted] = useState(false)
+  const [videoPlaying, setVideoPlaying] = useState(false)
+  const [finished, setFinished] = useState(false)
+  const [removed, setRemoved] = useState(false)
   const [rsvpVisible, setRsvpVisible] = useState(false)
   const [muted, setMuted] = useState(false)
   const [form, setForm] = useState({ name: '', guests: '2', phone: '', message: '' })
@@ -49,9 +140,22 @@ export default function App() {
   const videoRef = useRef(null)
   const audioRef = useRef(null)
 
+  const t = STRINGS[lang]
+  const isRtl = t.dir === 'rtl'
+
+  const mapsUrl =
+    'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(t.venueAddress)
+  const calUrl =
+    'https://calendar.google.com/calendar/render?action=TEMPLATE' +
+    '&text=' + encodeURIComponent(t.eventTitle) +
+    '&dates=20260903T180000/20260904T020000' +
+    '&location=' + encodeURIComponent(t.venueAddress) +
+    '&details=' + encodeURIComponent(t.calDetails)
+
+  const toggleLang = () => setLang((l) => (l === 'he' ? 'en' : 'he'))
+
   const openGate = () => {
     if (started) return
-    // gate tap is a user gesture, so audio is allowed to play with sound
     const audio = audioRef.current
     if (audio) {
       audio.volume = 0.6
@@ -75,7 +179,6 @@ export default function App() {
     setFinished(true)
   }
 
-  // play the video once the gate is tapped
   useEffect(() => {
     if (!started) return
     const video = videoRef.current
@@ -86,14 +189,12 @@ export default function App() {
     }
   }, [started])
 
-  // after the overlay finishes its fade-out, unmount it and unlock scrolling
   useEffect(() => {
     if (!finished) return
-    const t = setTimeout(() => setRemoved(true), 900)
-    return () => clearTimeout(t)
+    const t2 = setTimeout(() => setRemoved(true), 900)
+    return () => clearTimeout(t2)
   }, [finished])
 
-  // arrow cue: track whether the RSVP section is on screen
   useEffect(() => {
     const el = rsvpRef.current
     if (!el) return
@@ -114,18 +215,20 @@ export default function App() {
   const handleRsvp = (e) => {
     e.preventDefault()
     const body =
-      `Name: ${form.name}\n` +
-      `Number of guests: ${form.guests}\n` +
-      `Phone: ${form.phone}\n` +
-      `Message: ${form.message}`
+      `${t.emailName}: ${form.name}\n` +
+      `${t.emailGuests}: ${form.guests}\n` +
+      `${t.emailPhone}: ${form.phone}\n` +
+      `${t.emailMessage}: ${form.message}`
     window.location.href =
-      `mailto:${RSVP_EMAIL}?subject=${encodeURIComponent('Wedding RSVP — ' + form.name)}` +
+      `mailto:${RSVP_EMAIL}?subject=${encodeURIComponent(t.emailSubject + form.name)}` +
       `&body=${encodeURIComponent(body)}`
     setSent(true)
   }
 
   return (
     <div
+      dir={t.dir}
+      lang={lang}
       className={`haya-root fixed inset-0 overscroll-contain bg-[color:var(--color-cream)] ${
         removed ? 'overflow-y-auto' : 'overflow-hidden'
       }`}
@@ -140,45 +243,45 @@ export default function App() {
 
       <audio ref={audioRef} src="/music.mp3" loop preload="auto" />
 
-      {/* ---- Scrollable content (rendered underneath the intro so the crossfade reveals it) ---- */}
+      {/* ---- Scrollable content ---- */}
       <div className="mx-auto w-full max-w-[480px]">
         <section id="hero" style={frameBg}>
           <div className="relative w-full h-[100dvh] overflow-hidden">
-            <img src="/2.webp" alt="Wedding hero" className="absolute inset-0 w-full h-full object-cover" />
+            <img src="/hero.webp" alt={t.couple} className="absolute inset-0 w-full h-full object-cover" />
           </div>
         </section>
 
-        {/* 1 — Details: parents, date & time, place + navigate */}
+        {/* 1 — Details */}
         <section id="details" className="py-6 px-2.5" style={frameBg}>
           <div className={`${frameBorder} bg-white/70 px-7 py-12 text-center`}>
-            <p className="text-sm uppercase tracking-[0.35em] text-[#7E632E]/70">Wedding Invitation</p>
-            <h1 className="mt-4 text-4xl font-serif text-[#3E2F28]">Haya &amp; Loved One</h1>
+            <p className="text-sm tracking-[0.15em] text-[#7E632E]/70">{t.invitationEyebrow}</p>
+            <h1 className="mt-4 text-4xl font-serif text-[#3E2F28]">{t.couple}</h1>
 
             <div className="mt-6 space-y-1 text-sm leading-6 text-[#5D4A41]">
-              <p>Daughter of Mr. &amp; Mrs. Cohen</p>
-              <p>Son of Mr. &amp; Mrs. Levi</p>
+              <p>{t.parent1}</p>
+              <p>{t.parent2}</p>
             </div>
 
             <div className="mx-auto my-8 h-px w-16 bg-[#9C7C3C]/30" />
 
             <div className="space-y-1">
-              <p className="text-xs uppercase tracking-[0.3em] text-[#7E632E]/70">When</p>
-              <p className="text-lg font-serif text-[#3E2F28]">Thursday, September 3, 2026</p>
-              <p className="text-base text-[#5D4A41]">Reception from 18:00</p>
+              <p className="text-xs tracking-[0.15em] text-[#7E632E]/70">{t.whenLabel}</p>
+              <p className="text-lg font-serif text-[#3E2F28]">{t.date}</p>
+              <p className="text-base text-[#5D4A41]">{t.reception}</p>
             </div>
 
             <div className="mt-6 space-y-1">
-              <p className="text-xs uppercase tracking-[0.3em] text-[#7E632E]/70">Where</p>
-              <p className="text-lg font-serif text-[#3E2F28]">{VENUE_NAME}</p>
-              <p className="text-base text-[#5D4A41]">{VENUE_ADDRESS}</p>
+              <p className="text-xs tracking-[0.15em] text-[#7E632E]/70">{t.whereLabel}</p>
+              <p className="text-lg font-serif text-[#3E2F28]">{t.venueName}</p>
+              <p className="text-base text-[#5D4A41]">{t.venueAddress}</p>
             </div>
 
             <div className="mt-7 flex justify-center gap-4">
               <a
-                href={MAPS_URL}
+                href={mapsUrl}
                 target="_blank"
                 rel="noreferrer"
-                aria-label="Navigate to venue"
+                aria-label={t.navAria}
                 className="flex h-12 w-12 items-center justify-center rounded-full border-[3px] border-[#B1CAA7] bg-white/70 text-[#7E632E] shadow-[0_8px_22px_rgba(124,99,46,0.14)] transition-colors hover:bg-white/85"
               >
                 <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -187,10 +290,10 @@ export default function App() {
                 </svg>
               </a>
               <a
-                href={CAL_URL}
+                href={calUrl}
                 target="_blank"
                 rel="noreferrer"
-                aria-label="Add to calendar"
+                aria-label={t.calAria}
                 className="flex h-12 w-12 items-center justify-center rounded-full border-[3px] border-[#B1CAA7] bg-white/70 text-[#7E632E] shadow-[0_8px_22px_rgba(124,99,46,0.14)] transition-colors hover:bg-white/85"
               >
                 <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -205,12 +308,9 @@ export default function App() {
         {/* 2 — Dress code */}
         <section id="dress-code" className="py-6 px-2.5" style={frameBg}>
           <div className={`${frameBorder} bg-white/70 px-7 py-12 text-center`}>
-            <p className="text-xs uppercase tracking-[0.3em] text-[#7E632E]/70">Dress Code</p>
-            <h2 className="mt-3 text-3xl font-serif text-[#3E2F28]">Formal Elegant</h2>
-            <p className="mx-auto mt-4 max-w-[28rem] text-base leading-7 text-[#5D4A41]">
-              We&apos;d love to see you dressed to celebrate. Think cocktail attire in soft,
-              earthy tones — and comfortable enough to dance the night away.
-            </p>
+            <p className="text-xs tracking-[0.15em] text-[#7E632E]/70">{t.dressEyebrow}</p>
+            <h2 className="mt-3 text-3xl font-serif text-[#3E2F28]">{t.dressTitle}</h2>
+            <p className="mx-auto mt-4 max-w-[28rem] text-base leading-7 text-[#5D4A41]">{t.dressText}</p>
             <div className="mt-7 flex justify-center gap-3">
               {['#7E632E', '#B1CAA7', '#E7DACC', '#3E2F28'].map((c) => (
                 <span
@@ -228,14 +328,14 @@ export default function App() {
         <section id="timeline" className="py-6 px-2.5" style={frameBg}>
           <div className={`${frameBorder} bg-white/70 px-7 py-12`}>
             <div className="text-center">
-              <p className="text-xs uppercase tracking-[0.3em] text-[#7E632E]/70">Order of the Evening</p>
-              <h2 className="mt-3 text-3xl font-serif text-[#3E2F28]">Timeline</h2>
+              <p className="text-xs tracking-[0.15em] text-[#7E632E]/70">{t.timelineEyebrow}</p>
+              <h2 className="mt-3 text-3xl font-serif text-[#3E2F28]">{t.timelineTitle}</h2>
             </div>
 
-            <ol className="relative mx-auto mt-9 max-w-[24rem] border-l-2 border-[#9C7C3C]/25 pl-7">
-              {TIMELINE.map((item) => (
+            <ol className={`relative mx-auto mt-9 max-w-[24rem] ${isRtl ? 'border-r-2 pr-7' : 'border-l-2 pl-7'} border-[#9C7C3C]/25`}>
+              {t.timeline.map((item) => (
                 <li key={item.name} className="relative mb-7 last:mb-0">
-                  <span className="absolute -left-[37px] top-1 flex h-4 w-4 items-center justify-center rounded-full border-2 border-[#B1CAA7] bg-white">
+                  <span className={`absolute ${isRtl ? '-right-[37px]' : '-left-[37px]'} top-1 flex h-4 w-4 items-center justify-center rounded-full border-2 border-[#B1CAA7] bg-white`}>
                     <span className="h-1.5 w-1.5 rounded-full bg-[#7E632E]" />
                   </span>
                   <p className="text-sm font-semibold tracking-wide text-[#7E632E]">{item.time}</p>
@@ -249,27 +349,25 @@ export default function App() {
         {/* 4 — RSVP */}
         <section ref={rsvpRef} id="rsvp" className="py-6 px-2.5" style={frameBg}>
           <div className={`${frameBorder} bg-white/70 px-7 py-12 text-center`}>
-            <p className="text-xs uppercase tracking-[0.3em] text-[#7E632E]/70">Kindly Reply</p>
-            <h2 className="mt-3 text-3xl font-serif text-[#3E2F28]">RSVP</h2>
-            <p className="mx-auto mt-4 max-w-[28rem] text-base leading-7 text-[#5D4A41]">
-              Please let us know if you can join the celebration by August 1, 2026.
-            </p>
+            <p className="text-xs tracking-[0.15em] text-[#7E632E]/70">{t.rsvpEyebrow}</p>
+            <h2 className="mt-3 text-3xl font-serif text-[#3E2F28]">{t.rsvpTitle}</h2>
+            <p className="mx-auto mt-4 max-w-[28rem] text-base leading-7 text-[#5D4A41]">{t.rsvpText}</p>
 
-            <form onSubmit={handleRsvp} className="mx-auto mt-7 grid max-w-[420px] gap-4 text-left">
+            <form onSubmit={handleRsvp} className={`mx-auto mt-7 grid max-w-[420px] gap-4 ${isRtl ? 'text-right' : 'text-left'}`}>
               <label className="block">
-                <span className="text-xs uppercase tracking-[0.2em] text-[#7E632E]">Name</span>
+                <span className="text-xs tracking-[0.1em] text-[#7E632E]">{t.nameLabel}</span>
                 <input
                   type="text"
                   value={form.name}
                   onChange={updateField('name')}
                   required
-                  placeholder="Your full name"
+                  placeholder={t.namePlaceholder}
                   className="mt-1 w-full rounded-2xl border border-[#E7DACC] bg-[#FBF6F1] px-4 py-3 text-base text-[#3E2F28] placeholder:text-[#5D4A41]/40 outline-none transition-colors focus:border-[#B1CAA7]"
                 />
               </label>
 
               <label className="block">
-                <span className="text-xs uppercase tracking-[0.2em] text-[#7E632E]">Number of guests</span>
+                <span className="text-xs tracking-[0.1em] text-[#7E632E]">{t.guestsLabel}</span>
                 <input
                   type="number"
                   min="1"
@@ -282,46 +380,44 @@ export default function App() {
               </label>
 
               <label className="block">
-                <span className="text-xs uppercase tracking-[0.2em] text-[#7E632E]">Phone</span>
+                <span className="text-xs tracking-[0.1em] text-[#7E632E]">{t.phoneLabel}</span>
                 <input
                   type="tel"
                   value={form.phone}
                   onChange={updateField('phone')}
                   required
-                  placeholder="+1 234 567 890"
+                  placeholder={t.phonePlaceholder}
                   className="mt-1 w-full rounded-2xl border border-[#E7DACC] bg-[#FBF6F1] px-4 py-3 text-base text-[#3E2F28] placeholder:text-[#5D4A41]/40 outline-none transition-colors focus:border-[#B1CAA7]"
                 />
               </label>
 
               <label className="block">
-                <span className="text-xs uppercase tracking-[0.2em] text-[#7E632E]">Message for the couple</span>
+                <span className="text-xs tracking-[0.1em] text-[#7E632E]">{t.messageLabel}</span>
                 <textarea
                   rows="3"
                   value={form.message}
                   onChange={updateField('message')}
-                  placeholder="A few warm words…"
+                  placeholder={t.messagePlaceholder}
                   className="mt-1 w-full resize-none rounded-2xl border border-[#E7DACC] bg-[#FBF6F1] px-4 py-3 text-base text-[#3E2F28] placeholder:text-[#5D4A41]/40 outline-none transition-colors focus:border-[#B1CAA7]"
                 />
               </label>
 
               <button
                 type="submit"
-                className="mt-2 rounded-full border-[3px] border-[#B1CAA7] bg-white/70 px-6 py-3 text-sm uppercase tracking-[0.2em] text-[#7E632E] shadow-[0_8px_22px_rgba(124,99,46,0.14)] transition-colors hover:bg-white/85"
+                className="mt-2 rounded-full border-[3px] border-[#B1CAA7] bg-white/70 px-6 py-3 text-sm tracking-[0.1em] text-[#7E632E] shadow-[0_8px_22px_rgba(124,99,46,0.14)] transition-colors hover:bg-white/85"
               >
-                Send RSVP
+                {t.submit}
               </button>
 
               {sent ? (
-                <p className="text-center text-sm text-[#7E632E]">
-                  Thank you! Your reply is on its way. 💛
-                </p>
+                <p className="text-center text-sm text-[#7E632E]">{t.thanks}</p>
               ) : null}
             </form>
           </div>
         </section>
       </div>
 
-      {/* ---- Cinematic intro overlay: gate image -> video -> fades out to reveal hero ---- */}
+      {/* ---- Cinematic intro overlay ---- */}
       {!removed ? (
         <div
           className="fixed inset-0 z-40 bg-black"
@@ -331,11 +427,10 @@ export default function App() {
             pointerEvents: finished ? 'none' : 'auto',
           }}
         >
-          {/* gate image — fades out as the video's first frame comes in */}
           <button
             type="button"
             onClick={openGate}
-            aria-label="Open the invitation"
+            aria-label={t.gateAria}
             className="absolute inset-0 block w-full h-full overflow-hidden cursor-pointer"
             style={{
               opacity: videoPlaying ? 0 : 1,
@@ -344,11 +439,9 @@ export default function App() {
               zIndex: 2,
             }}
           >
-            <img src="/1.webp" alt="Wedding invitation gate" className="absolute inset-0 w-full h-full object-cover" />
+            <img src="/1.webp" alt={t.gateAlt} className="absolute inset-0 w-full h-full object-cover" />
           </button>
 
-          {/* video — always mounted so it buffers behind the gate; plays on tap, then
-              fades in over the gate, and finally the whole overlay fades to the hero */}
           <video
             ref={videoRef}
             className="absolute inset-0 w-full h-full object-cover"
@@ -362,25 +455,34 @@ export default function App() {
             <source src="/intro.mp4" type="video/mp4" />
           </video>
 
-          {/* skip */}
           {started && !finished ? (
             <button
               type="button"
               onClick={finishIntro}
-              className="absolute bottom-4 right-4 z-10 rounded-full border border-white/50 bg-black/30 px-4 py-1.5 text-xs uppercase tracking-[0.2em] text-white/90 transition-colors hover:bg-black/50"
+              className="absolute bottom-4 left-4 z-10 rounded-full border border-white/50 bg-black/30 px-4 py-1.5 text-xs tracking-[0.1em] text-white/90 transition-colors hover:bg-black/50"
             >
-              Skip
+              {t.skip}
             </button>
           ) : null}
         </div>
       ) : null}
 
+      {/* ---- Language toggle (fixed top-right) ---- */}
+      <button
+        type="button"
+        onClick={toggleLang}
+        aria-label={lang === 'he' ? 'Switch to English' : 'החלפה לעברית'}
+        className="fixed top-4 right-4 z-[60] flex h-10 w-10 items-center justify-center rounded-full border border-[#9C7C3C]/40 bg-white/85 text-xl shadow-[0_4px_14px_rgba(124,99,46,0.18)] transition-colors hover:bg-white"
+      >
+        <span className="leading-none" aria-hidden="true">{t.switchFlag}</span>
+      </button>
+
       {started ? (
         <button
           type="button"
           onClick={toggleMute}
-          aria-label={muted ? 'Unmute music' : 'Mute music'}
-          className="fixed top-4 right-4 z-50 flex h-10 w-10 items-center justify-center rounded-full border border-[#9C7C3C]/40 bg-white/80 text-[#75511E] shadow-[0_4px_14px_rgba(124,99,46,0.18)] transition-colors hover:bg-white"
+          aria-label={muted ? t.muteOff : t.muteOn}
+          className="fixed top-4 left-4 z-50 flex h-10 w-10 items-center justify-center rounded-full border border-[#9C7C3C]/40 bg-white/80 text-[#75511E] shadow-[0_4px_14px_rgba(124,99,46,0.18)] transition-colors hover:bg-white"
         >
           {muted ? (
             <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -402,7 +504,7 @@ export default function App() {
         <button
           type="button"
           onClick={scrollToRsvp}
-          aria-label="Scroll to RSVP"
+          aria-label={t.scrollAria}
           className="haya-arrow-cue fixed bottom-6 left-1/2 -translate-x-1/2 z-30 text-[#75511E]"
         >
           <span className="flex flex-col items-center -space-y-2">
