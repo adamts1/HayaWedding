@@ -6,26 +6,21 @@ const frameBg = {
 const frameBorder = 'border-2 border-[#9C7C3C]/40'
 
 export default function App() {
-  // 'gate' -> press 1.png to play intro video, 'intro' -> video playing, 'hero' -> 2.png hero + sections
-  const [stage, setStage] = useState('gate')
+  // The cinematic intro (gate image -> video) lives in a fixed overlay above the
+  // hero. Transitions are crossfades: the gate fades into the video, then the whole
+  // overlay fades out to reveal the hero already painted underneath — no flash, no black.
+  const [started, setStarted] = useState(false)      // gate tapped -> play video
+  const [videoPlaying, setVideoPlaying] = useState(false) // first frame ready -> fade gate out
+  const [finished, setFinished] = useState(false)    // video ended -> fade overlay out
+  const [removed, setRemoved] = useState(false)       // overlay faded out -> unlock scroll
   const [rsvpVisible, setRsvpVisible] = useState(false)
   const [muted, setMuted] = useState(false)
-  // white "flash" overlay that masks each scene swap so no black frame shows
-  const [covered, setCovered] = useState(false)
   const rsvpRef = useRef(null)
   const videoRef = useRef(null)
   const audioRef = useRef(null)
 
-  // preload the heavy assets so the reveal after each flash is instant
-  useEffect(() => {
-    const hero = new Image()
-    hero.src = '/2.webp'
-    const v = document.createElement('video')
-    v.src = '/intro.webm'
-    v.preload = 'auto'
-  }, [])
-
   const openGate = () => {
+    if (started) return
     // gate tap is a user gesture, so audio is allowed to play with sound
     const audio = audioRef.current
     if (audio) {
@@ -35,8 +30,7 @@ export default function App() {
         play.catch(() => {})
       }
     }
-    setCovered(true) // flash in instantly, video reveals on its first frame
-    setStage('intro')
+    setStarted(true)
   }
 
   const toggleMute = () => {
@@ -48,29 +42,29 @@ export default function App() {
   }
 
   const finishIntro = () => {
-    setCovered(true) // flash in over the last video frame
-    setStage('hero')
+    setFinished(true)
   }
 
+  // play the video once the gate is tapped
   useEffect(() => {
-    if (stage !== 'intro') return
+    if (!started) return
     const video = videoRef.current
     if (!video) return
     const play = video.play()
     if (play && typeof play.catch === 'function') {
       play.catch(() => {})
     }
-  }, [stage])
+  }, [started])
 
-  // once the hero stage is mounted (image preloaded), fade the flash out to reveal it
+  // after the overlay finishes its fade-out, unmount it and unlock scrolling
   useEffect(() => {
-    if (stage !== 'hero' || !covered) return
-    const t = setTimeout(() => setCovered(false), 80)
+    if (!finished) return
+    const t = setTimeout(() => setRemoved(true), 900)
     return () => clearTimeout(t)
-  }, [stage, covered])
+  }, [finished])
 
+  // arrow cue: track whether the RSVP section is on screen
   useEffect(() => {
-    if (stage !== 'hero') return
     const el = rsvpRef.current
     if (!el) return
     const observer = new IntersectionObserver(
@@ -79,7 +73,7 @@ export default function App() {
     )
     observer.observe(el)
     return () => observer.disconnect()
-  }, [stage])
+  }, [])
 
   const scrollToRsvp = () => {
     rsvpRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -87,7 +81,9 @@ export default function App() {
 
   return (
     <div
-      className="haya-root fixed inset-0 overflow-y-auto overscroll-contain bg-[color:var(--color-cream)]"
+      className={`haya-root fixed inset-0 overscroll-contain bg-[color:var(--color-cream)] ${
+        removed ? 'overflow-y-auto' : 'overflow-hidden'
+      }`}
       style={{ WebkitOverflowScrolling: 'touch' }}
     >
       <style>{`
@@ -99,129 +95,133 @@ export default function App() {
 
       <audio ref={audioRef} src="/music.mp3" loop preload="auto" />
 
-      {/* white flash that masks each scene swap — appears instantly, fades out on reveal */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none fixed inset-0 z-50 bg-white"
-        style={{
-          opacity: covered ? 1 : 0,
-          transition: covered ? 'none' : 'opacity 2000ms ease-out',
-        }}
-      />
-
+      {/* ---- Scrollable content (rendered underneath the intro so the crossfade reveals it) ---- */}
       <div className="mx-auto w-full max-w-[480px]">
-        {stage === 'gate' ? (
-          <section style={frameBg}>
-            <button
-              type="button"
-              onClick={openGate}
-              aria-label="Open the invitation"
-              className="relative block w-full h-[100dvh] overflow-hidden cursor-pointer"
-            >
-              <img src="/1.webp" alt="Wedding invitation gate" className="absolute inset-0 w-full h-full object-cover" />
-            </button>
-          </section>
-        ) : null}
+        <section id="hero" style={frameBg}>
+          <div className="relative w-full h-[100dvh] overflow-hidden">
+            <img src="/2.webp" alt="Wedding hero" className="absolute inset-0 w-full h-full object-cover" />
+          </div>
+        </section>
 
-        {stage === 'intro' ? (
-          <section style={frameBg}>
-            <div className="relative w-full h-[100dvh] overflow-hidden bg-black">
-              <video
-                ref={videoRef}
-                className="absolute inset-0 w-full h-full object-cover"
-                playsInline
-                autoPlay
-                muted
-                preload="auto"
-                onPlaying={() => setCovered(false)}
-                onEnded={finishIntro}
-              >
-                <source src="/intro.webm" type="video/webm" />
-                <source src="/intro.mp4" type="video/mp4" />
-              </video>
-              <button
-                type="button"
-                onClick={finishIntro}
-                className="absolute bottom-4 right-4 z-10 rounded-full border border-white/50 bg-black/30 px-4 py-1.5 text-xs uppercase tracking-[0.2em] text-white/90 transition-colors hover:bg-black/50"
-              >
-                Skip
-              </button>
+        <section id="details" className="py-6 px-2.5" style={frameBg}>
+          <div className={`relative w-full aspect-[1170/2532] overflow-hidden ${frameBorder}`}>
+            <div className="absolute inset-0 bg-white/70" />
+            <div className="absolute inset-x-0 top-[18%] px-8 text-center">
+              <p className="text-sm uppercase tracking-[0.35em] text-[#7E632E]/70">Wedding Invitation</p>
+              <h1 className="mt-4 text-4xl font-serif text-[#3E2F28]">Haya &amp; Loved One</h1>
+              <p className="mx-auto mt-4 max-w-[28rem] text-base leading-7 text-[#5D4A41]">
+                Please join us for a joyful celebration of love, family, and new beginnings.
+              </p>
+              <div className="mt-8 flex justify-center">
+                <a
+                  href="https://www.google.com/maps/search/?api=1&query=wedding+venue"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-full border-[3px] border-[#B1CAA7] bg-white/70 px-6 py-3 text-sm text-[#7E632E] shadow-[0_8px_22px_rgba(124,99,46,0.14)] transition-colors hover:bg-white/85"
+                >
+                  Venue details
+                </a>
+              </div>
             </div>
-          </section>
-        ) : null}
+          </div>
+        </section>
 
-        {stage === 'hero' ? (
-          <>
-            <section id="hero" style={frameBg}>
-              <div className="relative w-full h-[100dvh] overflow-hidden">
-                <img src="/2.webp" alt="Wedding hero" className="absolute inset-0 w-full h-full object-cover" />
-              </div>
-            </section>
-
-            <section id="details" className="py-6 px-2.5" style={frameBg}>
-              <div className={`relative w-full aspect-[1170/2532] overflow-hidden ${frameBorder}`}>
-                <div className="absolute inset-0 bg-white/70" />
-                <div className="absolute inset-x-0 top-[18%] px-8 text-center">
-                  <p className="text-sm uppercase tracking-[0.35em] text-[#7E632E]/70">Wedding Invitation</p>
-                  <h1 className="mt-4 text-4xl font-serif text-[#3E2F28]">Haya &amp; Loved One</h1>
-                  <p className="mx-auto mt-4 max-w-[28rem] text-base leading-7 text-[#5D4A41]">
-                    Please join us for a joyful celebration of love, family, and new beginnings.
-                  </p>
-                  <div className="mt-8 flex justify-center">
-                    <a
-                      href="https://www.google.com/maps/search/?api=1&query=wedding+venue"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="rounded-full border-[3px] border-[#B1CAA7] bg-white/70 px-6 py-3 text-sm text-[#7E632E] shadow-[0_8px_22px_rgba(124,99,46,0.14)] transition-colors hover:bg-white/85"
-                    >
-                      Venue details
-                    </a>
+        <section ref={rsvpRef} id="rsvp" className="py-6 px-2.5" style={{ ...frameBg, animationDelay: '0.15s' }}>
+          <div
+            className={`overflow-hidden ${frameBorder}`}
+            style={{
+              backgroundColor: '#F6F4ED',
+              backgroundImage: 'linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.76))',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              minHeight: '520px',
+            }}
+          >
+            <div className="pt-[32%] pb-10 px-5">
+              <div className="mx-auto max-w-[420px] rounded-[28px] bg-white/80 p-6 shadow-soft">
+                <h2 className="text-2xl font-serif text-[#7E632E]">RSVP</h2>
+                <p className="mt-3 text-sm leading-7 text-[#5D4A41]">
+                  Let us know if you can join the celebration.
+                </p>
+                <div className="mt-6 grid gap-4">
+                  <div className="rounded-3xl border border-[#E7DACC] bg-[#FBF6F1] p-4">
+                    <p className="text-sm text-[#7E632E]">Email</p>
+                    <p className="mt-1 text-base font-semibold text-[#3E2F28]">hello@example.com</p>
+                  </div>
+                  <div className="rounded-3xl border border-[#E7DACC] bg-[#FBF6F1] p-4">
+                    <p className="text-sm text-[#7E632E]">Phone</p>
+                    <p className="mt-1 text-base font-semibold text-[#3E2F28]">+1 234 567 890</p>
                   </div>
                 </div>
               </div>
-            </section>
-
-            <section ref={rsvpRef} id="rsvp" className="py-6 px-2.5" style={{ ...frameBg, animationDelay: '0.15s' }}>
-              <div
-                className={`overflow-hidden ${frameBorder}`}
-                style={{
-                  backgroundColor: '#F6F4ED',
-                  backgroundImage: 'linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.76))',
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                  minHeight: '520px',
-                }}
-              >
-                <div className="pt-[32%] pb-10 px-5">
-                  <div className="mx-auto max-w-[420px] rounded-[28px] bg-white/80 p-6 shadow-soft">
-                    <h2 className="text-2xl font-serif text-[#7E632E]">RSVP</h2>
-                    <p className="mt-3 text-sm leading-7 text-[#5D4A41]">
-                      Let us know if you can join the celebration.
-                    </p>
-                    <div className="mt-6 grid gap-4">
-                      <div className="rounded-3xl border border-[#E7DACC] bg-[#FBF6F1] p-4">
-                        <p className="text-sm text-[#7E632E]">Email</p>
-                        <p className="mt-1 text-base font-semibold text-[#3E2F28]">hello@example.com</p>
-                      </div>
-                      <div className="rounded-3xl border border-[#E7DACC] bg-[#FBF6F1] p-4">
-                        <p className="text-sm text-[#7E632E]">Phone</p>
-                        <p className="mt-1 text-base font-semibold text-[#3E2F28]">+1 234 567 890</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </section>
-          </>
-        ) : null}
+            </div>
+          </div>
+        </section>
       </div>
 
-      {stage !== 'gate' ? (
+      {/* ---- Cinematic intro overlay: gate image -> video -> fades out to reveal hero ---- */}
+      {!removed ? (
+        <div
+          className="fixed inset-0 z-40 bg-black"
+          style={{
+            opacity: finished ? 0 : 1,
+            transition: 'opacity 800ms ease-out',
+            pointerEvents: finished ? 'none' : 'auto',
+          }}
+        >
+          {/* gate image — fades out as the video's first frame comes in */}
+          <button
+            type="button"
+            onClick={openGate}
+            aria-label="Open the invitation"
+            className="absolute inset-0 block w-full h-full overflow-hidden cursor-pointer"
+            style={{
+              opacity: videoPlaying ? 0 : 1,
+              transition: 'opacity 600ms ease-out',
+              pointerEvents: started ? 'none' : 'auto',
+              zIndex: 2,
+            }}
+          >
+            <img src="/1.webp" alt="Wedding invitation gate" className="absolute inset-0 w-full h-full object-cover" />
+          </button>
+
+          {/* video — fades in over the gate, then the whole overlay fades to the hero */}
+          {started ? (
+            <video
+              ref={videoRef}
+              className="absolute inset-0 w-full h-full object-cover"
+              style={{ opacity: videoPlaying ? 1 : 0, transition: 'opacity 600ms ease-out', zIndex: 1 }}
+              playsInline
+              autoPlay
+              muted
+              preload="auto"
+              onPlaying={() => setVideoPlaying(true)}
+              onEnded={finishIntro}
+            >
+              <source src="/intro.webm" type="video/webm" />
+              <source src="/intro.mp4" type="video/mp4" />
+            </video>
+          ) : null}
+
+          {/* skip */}
+          {started && !finished ? (
+            <button
+              type="button"
+              onClick={finishIntro}
+              className="absolute bottom-4 right-4 z-10 rounded-full border border-white/50 bg-black/30 px-4 py-1.5 text-xs uppercase tracking-[0.2em] text-white/90 transition-colors hover:bg-black/50"
+            >
+              Skip
+            </button>
+          ) : null}
+        </div>
+      ) : null}
+
+      {started ? (
         <button
           type="button"
           onClick={toggleMute}
           aria-label={muted ? 'Unmute music' : 'Mute music'}
-          className="fixed top-4 right-4 z-40 flex h-10 w-10 items-center justify-center rounded-full border border-[#9C7C3C]/40 bg-white/80 text-[#75511E] shadow-[0_4px_14px_rgba(124,99,46,0.18)] transition-colors hover:bg-white"
+          className="fixed top-4 right-4 z-50 flex h-10 w-10 items-center justify-center rounded-full border border-[#9C7C3C]/40 bg-white/80 text-[#75511E] shadow-[0_4px_14px_rgba(124,99,46,0.18)] transition-colors hover:bg-white"
         >
           {muted ? (
             <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -239,7 +239,7 @@ export default function App() {
         </button>
       ) : null}
 
-      {stage === 'hero' && !rsvpVisible ? (
+      {removed && !rsvpVisible ? (
         <button
           type="button"
           onClick={scrollToRsvp}
