@@ -86,7 +86,7 @@ export default function App() {
               type="button"
               onClick={openGate}
               aria-label="Open the invitation"
-              className="relative block w-full aspect-[1170/2532] overflow-hidden cursor-pointer"
+              className="relative block w-full h-[100dvh] overflow-hidden cursor-pointer"
             >
               <img src="/1.webp" alt="Wedding invitation gate" className="absolute inset-0 w-full h-full object-cover" />
             </button>
@@ -95,7 +95,7 @@ export default function App() {
 
         {stage === 'intro' ? (
           <section style={frameBg}>
-            <div className="relative w-full aspect-[1170/2532] overflow-hidden bg-black">
+            <div className="relative w-full h-[100dvh] overflow-hidden bg-black">
               <video
                 ref={videoRef}
                 className="absolute inset-0 w-full h-full object-cover"
@@ -121,7 +121,7 @@ export default function App() {
         {stage === 'hero' ? (
           <>
             <section id="hero" style={frameBg}>
-              <div className="relative w-full aspect-[1170/2532] overflow-hidden">
+              <div className="relative w-full h-[100dvh] overflow-hidden">
                 <img src="/2.webp" alt="Wedding hero" className="absolute inset-0 w-full h-full object-cover" />
               </div>
             </section>
