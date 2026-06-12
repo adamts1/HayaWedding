@@ -10,9 +10,20 @@ export default function App() {
   const [stage, setStage] = useState('gate')
   const [rsvpVisible, setRsvpVisible] = useState(false)
   const [muted, setMuted] = useState(false)
+  // white "flash" overlay that masks each scene swap so no black frame shows
+  const [covered, setCovered] = useState(false)
   const rsvpRef = useRef(null)
   const videoRef = useRef(null)
   const audioRef = useRef(null)
+
+  // preload the heavy assets so the reveal after each flash is instant
+  useEffect(() => {
+    const hero = new Image()
+    hero.src = '/2.webp'
+    const v = document.createElement('video')
+    v.src = '/intro.webm'
+    v.preload = 'auto'
+  }, [])
 
   const openGate = () => {
     // gate tap is a user gesture, so audio is allowed to play with sound
@@ -24,6 +35,7 @@ export default function App() {
         play.catch(() => {})
       }
     }
+    setCovered(true) // flash in instantly, video reveals on its first frame
     setStage('intro')
   }
 
@@ -36,6 +48,7 @@ export default function App() {
   }
 
   const finishIntro = () => {
+    setCovered(true) // flash in over the last video frame
     setStage('hero')
   }
 
@@ -48,6 +61,13 @@ export default function App() {
       play.catch(() => {})
     }
   }, [stage])
+
+  // once the hero stage is mounted (image preloaded), fade the flash out to reveal it
+  useEffect(() => {
+    if (stage !== 'hero' || !covered) return
+    const t = setTimeout(() => setCovered(false), 80)
+    return () => clearTimeout(t)
+  }, [stage, covered])
 
   useEffect(() => {
     if (stage !== 'hero') return
@@ -79,6 +99,16 @@ export default function App() {
 
       <audio ref={audioRef} src="/music.mp3" loop preload="auto" />
 
+      {/* white flash that masks each scene swap — appears instantly, fades out on reveal */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none fixed inset-0 z-50 bg-white"
+        style={{
+          opacity: covered ? 1 : 0,
+          transition: covered ? 'none' : 'opacity 2000ms ease-out',
+        }}
+      />
+
       <div className="mx-auto w-full max-w-[480px]">
         {stage === 'gate' ? (
           <section style={frameBg}>
@@ -102,6 +132,8 @@ export default function App() {
                 playsInline
                 autoPlay
                 muted
+                preload="auto"
+                onPlaying={() => setCovered(false)}
                 onEnded={finishIntro}
               >
                 <source src="/intro.webm" type="video/webm" />
