@@ -49,7 +49,7 @@ export default function App() {
     <div
       dir={t.dir}
       lang="he"
-      className="haya-root fixed inset-0 overflow-hidden overscroll-contain bg-[color:var(--color-cream)]"
+      className="haya-root fixed inset-0 overflow-y-auto overscroll-contain bg-[color:var(--color-cream)]"
       style={{ WebkitOverflowScrolling: 'touch' }}
     >
       <style>{`
@@ -59,9 +59,7 @@ export default function App() {
       {/* ---- Hero ---- */}
       <div className="mx-auto w-full max-w-[480px]">
         <section id="hero" style={frameBg}>
-          <div className="relative w-full h-[100dvh] overflow-hidden">
-            <img src="/hero.webp" alt={t.couple} className="absolute inset-0 w-full h-full object-contain" />
-          </div>
+          <img src="/hero.webp" alt={t.couple} className="block w-full h-auto" />
         </section>
       </div>
 
