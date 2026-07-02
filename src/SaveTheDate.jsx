@@ -14,7 +14,7 @@ export default function SaveTheDate() {
           <img
             src="/savethedate.png"
             alt="Haya & Aviad — Save the Date"
-            className="absolute inset-0 w-full h-full object-cover"
+            className="absolute inset-0 w-full h-full object-contain"
           />
         </section>
       </div>

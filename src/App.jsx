@@ -60,7 +60,7 @@ export default function App() {
       <div className="mx-auto w-full max-w-[480px]">
         <section id="hero" style={frameBg}>
           <div className="relative w-full h-[100dvh] overflow-hidden">
-            <img src="/hero.webp" alt={t.couple} className="absolute inset-0 w-full h-full object-cover" />
+            <img src="/hero.webp" alt={t.couple} className="absolute inset-0 w-full h-full object-contain" />
           </div>
         </section>
       </div>
